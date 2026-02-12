@@ -4,13 +4,10 @@
 //#include "Node.hpp"
 #include "Iterator.hpp"
 #include "Node.hpp"
-<<<<<<< HEAD
-
+#include <cstddef>
 #include <cstdlib>
 #include <initializer_list>
-=======
 #include <cstdlib>
->>>>>>> c4c0df0e7c441ba477588490f512c47f1fc5d2cf
 #include <iostream>
 #include <stdexcept>
 
@@ -22,11 +19,7 @@ class List {
         size_t m_size;
 
         //methods
-<<<<<<< HEAD
         void displayNode(Node<T>* currentNode) const;
-=======
-        void displayNode(Node<T> *crrentNode) const;
->>>>>>> c4c0df0e7c441ba477588490f512c47f1fc5d2cf
         bool searchNode(Node<T>* someNode) const;
         bool is_empty() const;
         Node<T>* find_previous_and_next_node(const int position) const;
@@ -41,21 +34,13 @@ class List {
 
         //methods
         void insert(const T value);
-<<<<<<< HEAD
         void insert(const T value, const unsigned int position);
-=======
-        void insert(const T value,const unsigned int position);
->>>>>>> c4c0df0e7c441ba477588490f512c47f1fc5d2cf
         void delete_node(const T value);
         void delete_node_in_position(const unsigned int position);
         void concat(List<T>* MyList);
         void supprimer_doublon();
         void displayList() const;
-<<<<<<< HEAD
-        unsigned int size() const;
-=======
-        unsigned int getSize() const;
->>>>>>> c4c0df0e7c441ba477588490f512c47f1fc5d2cf
+        size_t size() const;
         bool find_value(const T value) const;
 
         Iterator<T> begin() const;
@@ -83,7 +68,6 @@ List<T>::List(const T value) : m_size(1) {
 
     std::cout << "\t\tm_root = " << m_root << "\n";
     std::cout << "\t\t---------OBJET CREER--------\n";
-<<<<<<< HEAD
 }
 
 template<typename T>
@@ -101,8 +85,6 @@ List<T>::List(std::initializer_list<T> list) : m_root(nullptr), m_size(0) {
     for (auto i = 0; i < list.size(); i++, it++) {
         this->insert(*it);
     }
-=======
->>>>>>> c4c0df0e7c441ba477588490f512c47f1fc5d2cf
 }
 //destructor.
 template<typename T>
@@ -309,7 +291,7 @@ void List<T>::displayNode(Node<T>* currentNode) const {
 
 //b
 template<typename T>
-unsigned int List<T>::size() const {
+size_t List<T>::size() const {
     return m_size;
 }
 //
@@ -347,13 +329,10 @@ Node<T>* List<T>::find_previous_and_next_node(const int position) const {
 
 //
 
-<<<<<<< HEAD
 template<typename T>
 Iterator<T> List<T>::begin() const {
     return Iterator<T>(m_root);
 }
-=======
->>>>>>> c4c0df0e7c441ba477588490f512c47f1fc5d2cf
 
 template<typename T>
 Iterator<T> List<T>::end() const {
