@@ -6,12 +6,10 @@
 template<typename T>
 class Iterator {
     private:
-        Node<T>* ptr_;
+        Node<T>* current_;
 
     public:
         Iterator(Node<T>* ptr);
-        Iterator(const Iterator& other);
-
         Node<T>& operator*() const;
         bool operator!=(const Iterator<T>& rhs) const;
         bool operator==(const Iterator<T>& rhs) const;
@@ -20,36 +18,33 @@ class Iterator {
 };
 
 template<typename T>
-Iterator<T>::Iterator(Node<T>* ptr) : ptr_(ptr) {}
-
-template<typename T>
-Iterator<T>::Iterator(const Iterator& other) : ptr_(other.ptr_){}
+Iterator<T>::Iterator(Node<T>* ptr) : current_(ptr) {}
 
 template<typename T>
 Node<T>& Iterator<T>::operator*() const {
-    return (*ptr_);
+    return *current_;
 }
 
 template<typename T>
-bool Iterator<T>::operator!=(const Iterator<T>& rhs) const{
-    return (ptr_ != rhs.ptr_);
+bool Iterator<T>::operator!=(const Iterator<T>& rhs) const {
+    return (current_ != rhs.current_);
 }
 
 template<typename T>
-bool Iterator<T>::operator==(const Iterator<T>& rhs) const{
-    return (ptr_ == rhs.ptr_);
+bool Iterator<T>::operator==(const Iterator<T>& rhs) const {
+    return (current_ == rhs.current_);
 }
 
 template<typename T>
 Iterator<T>& Iterator<T>::operator++() {
-    ++ptr_;
-    return *(this);
+    current_ = current_->Next;
+    return (*this);
 }
 
 template<typename T>
 Iterator<T> Iterator<T>::operator++(int) const {
     Iterator<T> tmp = *this;
-    ++(*this);
+    *this = operator++();
     return tmp;
 }
 

@@ -15,12 +15,12 @@
 template<typename T>
 class List {
     private:
-        Node<T>* m_root;
+        Node<T>* root_;
         size_t m_size;
 
         //methods
-        void displayNode(Node<T>* currentNode) const;
-        bool searchNode(Node<T>* someNode) const;
+        void display_node(Node<T>* currentNode) const;
+        bool search_node(Node<T>* someNode) const;
         bool is_empty() const;
         Node<T>* find_previous_and_next_node(const int position) const;
 
@@ -34,12 +34,12 @@ class List {
 
         //methods
         void insert(const T value);
-        void insert(const T value, const unsigned int position);
+        void insert(const T value, size_t position);
         void delete_node(const T value);
-        void delete_node_in_position(const unsigned int position);
+        void delete_node_in_position(size_t position);
         void concat(List<T>* MyList);
-        void supprimer_doublon();
-        void displayList() const;
+        void remove_duplicate();
+        void display() const;
         size_t size() const;
         bool find_value(const T value) const;
 
@@ -55,51 +55,33 @@ class List {
 
 // constructors
 template<typename T>
-List<T>::List() : m_root(nullptr), m_size(0) {
-
-    std::cout << "\t\tm_root = " << m_root << "\n";
-    std::cout << "\t\t---------OBJET CREER--------\n";
-}
+List<T>::List() : root_(nullptr), m_size(0) {}
 //
 template<typename T>
-List<T>::List(const T value) : m_size(1) {
-
-    m_root = create_Node(value);
-
-    std::cout << "\t\tm_root = " << m_root << "\n";
-    std::cout << "\t\t---------OBJET CREER--------\n";
-}
+List<T>::List(const T value) : m_size(1), root_(create_Node(value)) {}
 
 template<typename T>
 List<T>::List(const List<T>& rhs) {
-    Node<T>* tmp = rhs.m_root;
-    for (auto i = 0; i < rhs.m_size; i++) {
-        this->insert(tmp->value);
-        tmp = tmp->Next;
-    }
+
 }
 
 template<typename T>
-List<T>::List(std::initializer_list<T> list) : m_root(nullptr), m_size(0) {
-    auto it = list.begin();
-    for (auto i = 0; i < list.size(); i++, it++) {
-        this->insert(*it);
+List<T>::List(std::initializer_list<T> list) : root_(nullptr), m_size(0) {
+    for (auto it =list.begin(); it < list.end(); it++) {
+        insert(*it);
     }
 }
 //destructor.
 template<typename T>
 List<T>::~List<T>() {
 
-//    Node<T>* currentNode = m_root;
     Node<T>* tmp = nullptr;
-    std::cout << "\n\t\tm_root = " << m_root << "\n";
-    while (m_root != nullptr) {
-        tmp = m_root->Next;
-        delete m_root;
-        m_root = tmp;
+    while (root_ != nullptr) {
+        tmp = root_->Next;
+        delete root_;
+        root_ = tmp;
     }
     m_size = 0;
-    std::cout << "\t\t---------OBJET DETRUIT------\n";
 }
 
 //METHODS-----------------------------
@@ -110,9 +92,9 @@ void List<T>::insert(const T value) {
     Node<T>* newNode = create_Node(value);
 
     if (is_empty()) {
-        m_root = newNode;
+        root_ = newNode;
     } else {
-        Node<T> *tmp = m_root;
+        Node<T> *tmp = root_;
         while (tmp->Next != nullptr) {
             tmp = tmp->Next;
         }
@@ -122,7 +104,7 @@ void List<T>::insert(const T value) {
 }
 //
 template<typename T>
-void List<T>::insert(const T value, const unsigned int position) {
+void List<T>::insert(const T value, size_t position) {
 
     if (position <= 0 || position > m_size + 1) {
         std::cout << "Position valide [" << 1 << "..." << m_size + 1 << "]\n.";
@@ -134,8 +116,8 @@ void List<T>::insert(const T value, const unsigned int position) {
 
     if (position == 1) {
 
-        newNode->Next = m_root;
-        m_root = newNode;
+        newNode->Next = root_;
+        root_ = newNode;
         m_size++;
 
     }  else {
@@ -144,7 +126,7 @@ void List<T>::insert(const T value, const unsigned int position) {
 
         //Node<T>* previousNode = nullptr;
 
-        if (static_cast<size_t>(position) < m_size) {
+        if (position < m_size) {
             newNode->Next = previousNode->Next;
             previousNode->Next = newNode;
         }
@@ -162,13 +144,13 @@ void List<T>::delete_node(const T value) {
     } else if (!find_value(value)) {
         throw std::runtime_error("La valeur saisie n'existe pas dans la liste.\n");
     } else {
-        Node<T>* tmp_root = m_root;
+        Node<T>* tmp_root = root_;
         Node<T>* previousNode = nullptr;
 
         while (tmp_root != nullptr) {
             if (tmp_root->value == value) {
                 if (previousNode == nullptr)
-                    m_root = tmp_root->Next;
+                    root_ = tmp_root->Next;
                 else
                     previousNode->Next = tmp_root->Next;
                 delete tmp_root;
@@ -182,7 +164,7 @@ void List<T>::delete_node(const T value) {
 
 //
 template<typename T>
-void List<T>::delete_node_in_position(const unsigned int position) {
+void List<T>::delete_node_in_position(size_t position) {
 
     if (position < 1 || position > m_size)
         throw std::out_of_range("Position invalide.\n");
@@ -190,13 +172,13 @@ void List<T>::delete_node_in_position(const unsigned int position) {
     if (is_empty()) {
         throw std::runtime_error("la liste est vide.\n");
     } else if (position == 1){
-        Node<T>* tmp = m_root;
-        m_root = m_root->Next;
+        Node<T>* tmp = root_;
+        root_ = root_->Next;
         delete tmp;
         m_size--;
     } else {
         int i = 1;
-        Node<T>* tmp_root = m_root;
+        Node<T>* tmp_root = root_;
         Node<T>* previousNode = nullptr;
 
         while (i < position) {
@@ -212,7 +194,7 @@ void List<T>::delete_node_in_position(const unsigned int position) {
 //
 template<typename T>
 void List<T>::concat(List<T>* MyList) {
-    Node<T>* tmp_root = MyList->m_root;
+    Node<T>* tmp_root = MyList->root_;
 
     while (tmp_root != nullptr) {
         insert(tmp_root->value);
@@ -221,7 +203,7 @@ void List<T>::concat(List<T>* MyList) {
 }
 //
 template<typename T>
-void List<T>::supprimer_doublon() {
+void List<T>::remove_duplicate() {
     if (is_empty()) {
         std::cerr << "\nLa liste est vide.\n";
         return;
@@ -229,7 +211,7 @@ void List<T>::supprimer_doublon() {
         return;
 
     //[2]->[6]->[5]->[1]->[2]->[1]->[7]->[6]->[3]->[10]->[5]->0X00
-    Node<T>* fixNode = m_root;
+    Node<T>* fixNode = root_;
     Node<T>* mobileNode = nullptr;
     unsigned int positionFix = 1;
     unsigned int positionMobile = 0;
@@ -252,10 +234,10 @@ void List<T>::supprimer_doublon() {
 }
 
 template<typename T>
-void List<T>::displayList() const {
-    Node<T>* tmp = m_root;
+void List<T>::display() const {
+    Node<T>* tmp = root_;
     std::cout << "\n";
-    displayNode(tmp);
+    display_node(tmp);
     std::cout << "\n-----size = " << m_size << "\n";
 }
 //
@@ -263,7 +245,7 @@ void List<T>::displayList() const {
 template<typename T>
 bool List<T>::find_value(const T value) const {
 
-    return searchNode(create_Node(value));
+    return search_node(create_Node(value));
 }
 
 ////////////////////////////////////////////////////
@@ -274,16 +256,16 @@ bool List<T>::find_value(const T value) const {
 
 template<typename T>
 bool List<T>::is_empty() const {
-    return m_root == nullptr;
+    return root_ == nullptr;
 }
 //
 template<typename T>
-void List<T>::displayNode(Node<T>* currentNode) const {
+void List<T>::display_node(Node<T>* currentNode) const {
     if (currentNode == nullptr) {
         std::cout << "0x000\n";
     } else {
         std::cout << "[" << currentNode->value << "]->";
-        displayNode(currentNode->Next);
+        display_node(currentNode->Next);
     }
 
 }
@@ -296,17 +278,17 @@ size_t List<T>::size() const {
 }
 //
 template<typename T>
-bool List<T>::searchNode(Node<T>* someNode) const {
+bool List<T>::search_node(Node<T>* someNode) const {
 
     if (is_empty()) {
         return false;
     } else {
-        Node<T> *tmp = m_root;
+        Node<T>* tmp = root_;
 
         while (tmp != nullptr) {
-            if (tmp->value == someNode->value) {
+            if (tmp->value == someNode->value)
                 return true;
-            }
+
             tmp = tmp->Next;
         }
         return false;
@@ -318,7 +300,7 @@ bool List<T>::searchNode(Node<T>* someNode) const {
 template<typename T>
 Node<T>* List<T>::find_previous_and_next_node(const int position) const {
 
-    Node<T>* tmp = m_root;
+    Node<T>* tmp = root_;
     int i = 1;
     while(i < position) {
         tmp = tmp->Next;
@@ -331,7 +313,7 @@ Node<T>* List<T>::find_previous_and_next_node(const int position) const {
 
 template<typename T>
 Iterator<T> List<T>::begin() const {
-    return Iterator<T>(m_root);
+    return Iterator<T>(root_);
 }
 
 template<typename T>

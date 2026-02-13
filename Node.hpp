@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <ostream>
-template<typename T>
 
+
+template<typename T>
 struct Node {
     T value;
     Node* Next;
@@ -16,10 +17,6 @@ struct Node {
         return fOut;
     }
 };
-/*
-template<typename T>
-std::ostream& operator<<(std::ostream& fOut, const Node<T>& )
-*/
 
 template<typename T>
 Node<T>* create_Node(const T value) {

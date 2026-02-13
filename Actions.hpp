@@ -25,7 +25,7 @@ template<typename T>
 static void menu_ajouter(const List<T>* MyList) {
 
     std::system("clear");
-    int npos = MyList->getSize() + 1;
+    int npos = MyList->size() + 1;
     int i = 1;
     std::cout << "\n----[-BIENVENUE AU MENU AJOUTER-]----\n";
     std::cout << "1. pour ajouter en fin de liste.\n";
@@ -68,17 +68,19 @@ void ajouter_une_valeur(List<T> *MyList) {
             size_t position = 0;
             std::cout << "Entre la position du noeud : ";
             do {
-                std::cin >> position;
-                if (std::cin.fail()) {
+                if (!(std::cin >> position)) {
                     std::cout << "Erreur de saisie. Veuillez réessayer: ";
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << ">_ ";
                 } 
-            }while (position < 1 || position > MyList->getSize() + 1);
-            do {
-                std::cout << "Entrer la valeur du Noeud : ";
-                std::cin >> valeur;
-            } while(std::cin.fail());
+            }while (position < 1 || position > MyList->size() + 1);
+
+            while (!(std::cin >> valeur)) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << ">_ ";
+            }
             MyList->insert(valeur, position);
         break;
     }
@@ -89,7 +91,7 @@ static void menu_supprimer(const List<T>* MyList)
 {
     std::cout << "\n\t----[-BIENVENUE AU MENU SUPPRIMER-]----\n";
     std::cout << "\t1. suppression par la valeur.\n";
-    std::cout << "\t2. suppression par position [1..." << MyList->getSize() << "].\n";
+    std::cout << "\t2. suppression par position [1..." << MyList->size() << "].\n";
 }
 //
 template<typename T>
@@ -120,7 +122,7 @@ void supprimer(List<T>* MyList)
                 std::cout << ">_.";
                 std::cin >> valeur;
             } while(std::cin.fail());
-            MyList->delete_value(valeur);
+            MyList->delete_node(valeur);
         break;
 
         case 2:
@@ -133,14 +135,14 @@ void supprimer(List<T>* MyList)
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 }
-            }while (position < 1 || position > MyList->getSize());
+            }while (position < 1 || position > MyList->size());
 
-            MyList->delete_value(position);
+            MyList->delete_node_in_position(position);
     }
 }
 template<typename T>
 void afficher_la_liste(const List<T>* MyList) {
     std::system("clear");
-    MyList->displayList();
+    MyList->display();
 }
 #endif

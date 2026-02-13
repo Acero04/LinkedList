@@ -1,4 +1,4 @@
-#include Actions.hpp "
+#include "Actions.hpp"
 #include "List.hpp"
 #include "functions.hpp"
 
@@ -33,7 +33,7 @@ int main() {
     }
   }
   std::cout << "Espace allouer pour la liste : "
-            << MyList->getSize() * sizeof(*MyList) << std::endl;
+            << MyList->size() * sizeof(*MyList) << std::endl;
   delete MyList;
 
   return 0;
